@@ -1,6 +1,7 @@
 {
     "cSpell.words": [
         "DBTX",
+        "oneof",
         "postgresql",
         "simplebank",
         "sqlc",
