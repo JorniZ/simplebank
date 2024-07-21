@@ -24,9 +24,10 @@ jobs:
         fail_on_empty: false
         sort_keys: false
     - name: Echo file
-      run: cat app.env
+      run: cat app.env; realpath app.env
 
   test:
+    needs: [create-envfile]
     runs-on: ubuntu-latest
     services:
       postgres:
