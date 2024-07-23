@@ -17,14 +17,13 @@ jobs:
     - name: Make envfile
       uses: SpicyPizza/create-envfile@v2.0
       with:
-        envkey_DB_DRIVER: "postgres"
-        envkey_DB_SOURCE: "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable"
-        envkey_SERVER_ADDRESS: "0.0.0.0:8080"
         file_name: app.env
         fail_on_empty: false
         sort_keys: false
-    - name: Echo file
-      run: cat app.env; realpath app.env
+      env:
+        DB_DRIVER: "postgres"
+        DB_SOURCE: "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable"
+        envkey_SERVER_ADDRESS: "0.0.0.0:8080"
     - name: Upload envfile
       uses: actions/upload-artifact@v3
       with:
