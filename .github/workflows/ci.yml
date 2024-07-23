@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Make envfile
-      uses: SpicyPizza/create-envfile@v2.0
+      uses: SpicyPizza/create-envfile@v2.0.3
       with:
         file_name: app.env
         fail_on_empty: false
@@ -25,7 +25,7 @@ jobs:
         DB_SOURCE: "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable"
         envkey_SERVER_ADDRESS: "0.0.0.0:8080"
     - name: Upload envfile
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4.3.4
       with:
         name: app-env
         path: app.env
@@ -48,15 +48,15 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4.1.7
 
     - name: Set up Go
-      uses: actions/setup-go@v4
+      uses: actions/setup-go@v5.0.2
       with:
         go-version: '1.22.5'
 
     - name: Download envfile
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4.1.8
       with:
         name: app-env
         path: .
