@@ -31,10 +31,11 @@ jobs:
         name: app-env
         path: app.env
 
+    - name: ls env
+      run: ls
+
     - name: cat env
-      run: |
-        ls
-        cat app.env
+      run: cat app.env
 
   test:
     needs: [create-envfile]
