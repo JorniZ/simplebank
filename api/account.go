@@ -61,7 +61,7 @@ func (server *Server) getAccount(ctx *gin.Context) {
 
 type listAccountRequest struct {
 	PageID   int32 `form:"page_id" binding:"required,min=1"`
-	PageSize int32 `form:"page_size" binding:"required,min=5,max=10"`
+	PageSize int32 `form:"page_size" binding:"required,min=3,max=10"`
 }
 
 func (server *Server) listAccount(ctx *gin.Context) {
@@ -98,13 +98,11 @@ func (server *Server) updateAccount(ctx *gin.Context) {
 	var reqURI updateAccountRequestURI
 	var reqBody updateAccountRequestBody
 
-	// Bind URI parameters
 	if err := ctx.ShouldBindUri(&reqURI); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
 	}
 
-	// Bind JSON body
 	if err := ctx.ShouldBindJSON(&reqBody); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
