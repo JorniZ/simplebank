@@ -64,7 +64,7 @@ jobs:
         path: .
 
     - name: cat env
-      run: cat env.env
+      run: cat app.env
 
     - name: Install golang-migrate
       run: |
