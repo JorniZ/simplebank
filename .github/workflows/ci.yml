@@ -32,7 +32,9 @@ jobs:
         path: app.env
 
     - name: cat env
-      run: cat app.env
+      run: |
+        ls
+        cat app.env
 
   test:
     needs: [create-envfile]
@@ -65,9 +67,6 @@ jobs:
       with:
         name: app-env
         path: .
-
-    - name: ls env
-      run: ls
 
     - name: cat env
       run: cat app.env
