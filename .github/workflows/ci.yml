@@ -30,12 +30,6 @@ jobs:
         name: app-env
         path: app.env
 
-    - name: ls env
-      run: ls
-
-    - name: cat env
-      run: cat app.env
-
   test:
     needs: [create-envfile]
     runs-on: ubuntu-latest
@@ -67,9 +61,6 @@ jobs:
       with:
         name: app-env
         path: .
-
-    - name: cat env
-      run: cat app.env
 
     - name: Install golang-migrate
       run: |
