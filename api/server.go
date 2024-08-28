@@ -7,6 +7,11 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
+const (
+	foreignKeyViolationErrCode = "23503"
+	UniqueViolationErrCode     = "23505"
+)
+
 type Server struct {
 	store  db.Store
 	router *gin.Engine
