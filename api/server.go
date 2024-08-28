@@ -1,6 +1,8 @@
 package api
 
 import (
+	"log"
+
 	db "github.com/JorniZ/simplebank/db/sqlc"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -22,7 +24,9 @@ func NewServer(store db.Store) *Server {
 	router := gin.Default()
 
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
-		v.RegisterValidation("currency", validCurrency)
+		if err := v.RegisterValidation("currency", validCurrency); err != nil {
+			log.Fatal("error registering currency validation:", err.Error())
+		}
 	}
 
 	accounts := router.Group("/accounts")
