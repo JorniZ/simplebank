@@ -37,6 +37,10 @@ func NewServer(store db.Store) *Server {
 
 	transfers.POST("", server.createTransfer)
 
+	users := router.Group("/users")
+
+	users.POST("", server.createUser)
+
 	server.router = router
 	return server
 }
