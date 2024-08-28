@@ -1,0 +1,76 @@
+# This workflow will build a golang project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+
+name: ci-test
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  create-envfile:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create .env file
+      uses: SpicyPizza/create-envfile@v2.0.3
+      with:
+        file_name: app.env
+        fail_on_empty: true
+        sort_keys: false
+        # errors are intended here
+        envkey_DB_DRIVER: "postgres"
+        envkey_DB_SOURCE: "postgresql://root:${{ secrets.DB_PASS }}@localhost:5432/simple_bank?sslmode=disable"
+        envkey_SERVER_ADDRESS: "0.0.0.0:8080"
+        
+    - name: Upload .env file
+      uses: actions/upload-artifact@v4.3.4
+      with:
+        name: app-env
+        path: app.env
+
+  test:
+    needs: [create-envfile]
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASS }}
+          POSTGRES_DB: simple_bank
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v4.1.7
+
+    - name: Set up Go
+      uses: actions/setup-go@v5.0.2
+      with:
+        go-version: '1.22.5'
+
+    - name: Download .env file
+      uses: actions/download-artifact@v4.1.8
+      with:
+        name: app-env
+        path: .
+
+    - name: Install golang-migrate
+      run: |
+        curl -L https://github.com/golang-migrate/migrate/releases/download/v4.17.1/migrate.linux-amd64.tar.gz | tar xvz
+        sudo mv migrate /usr/bin/
+        which migrate
+
+    - name: Run database migrations
+      run: make migrateup
+
+    - name: Run tests
+      run: make test
