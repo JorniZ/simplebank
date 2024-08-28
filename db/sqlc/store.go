@@ -61,7 +61,7 @@ func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (Tr
 	err := store.executeTransaction(ctx, func(q *Queries) error {
 		var err error
 
-		result.Transfer, err = q.CreateTransfer(ctx, CreateTransferParams{ //nolint:staticcheck
+		result.Transfer, err = q.CreateTransfer(ctx, CreateTransferParams{ //nolint:gosimple
 			FromAccountID: arg.FromAccountID,
 			ToAccountID:   arg.ToAccountID,
 			Amount:        arg.Amount,
