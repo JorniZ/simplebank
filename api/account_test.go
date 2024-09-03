@@ -100,7 +100,7 @@ func TestCreateAccountAPI(t *testing.T) {
 			store := mockdb.NewMockStore(ctrl)
 			tc.buildStubs(store)
 
-			server := NewServer(store)
+			server := newTestServer(t, store)
 			recorder := httptest.NewRecorder()
 
 			userJSON, _ := json.Marshal(tc.body)
@@ -189,7 +189,7 @@ func TestGetAccountAPI(t *testing.T) {
 			store := mockdb.NewMockStore(ctrl)
 			tc.buildStubs(store)
 
-			server := NewServer(store)
+			server := newTestServer(t, store)
 			recorder := httptest.NewRecorder()
 
 			url := fmt.Sprintf(accountRouteWithID, tc.accountID)
@@ -265,7 +265,7 @@ func TestListAccountAPI(t *testing.T) {
 			store := mockdb.NewMockStore(ctrl)
 			tc.buildStubs(store)
 
-			server := NewServer(store)
+			server := newTestServer(t, store)
 			recorder := httptest.NewRecorder()
 
 			url := fmt.Sprintf(accountRouteWithPagination, tc.pageID, tc.pageSize)
@@ -386,7 +386,7 @@ func TestUpdateAccountAPI(t *testing.T) {
 			store := mockdb.NewMockStore(ctrl)
 			tc.buildStubs(store)
 
-			server := NewServer(store)
+			server := newTestServer(t, store)
 			recorder := httptest.NewRecorder()
 
 			bodyJSON, _ := json.Marshal(tc.body)
@@ -474,7 +474,7 @@ func TestDeleteAccountAPI(t *testing.T) {
 			store := mockdb.NewMockStore(ctrl)
 			tc.buildStubs(store)
 
-			server := NewServer(store)
+			server := newTestServer(t, store)
 			recorder := httptest.NewRecorder()
 
 			url := fmt.Sprintf(accountRouteWithID, tc.accountID)

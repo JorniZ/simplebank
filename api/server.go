@@ -1,9 +1,12 @@
 package api
 
 import (
+	"fmt"
 	"log"
 
 	db "github.com/JorniZ/simplebank/db/sqlc"
+	"github.com/JorniZ/simplebank/token"
+	"github.com/JorniZ/simplebank/util"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
@@ -15,19 +18,36 @@ const (
 )
 
 type Server struct {
-	store  db.Store
-	router *gin.Engine
+	config     util.Config
+	store      db.Store
+	tokenMaker token.Maker
+	router     *gin.Engine
 }
 
-func NewServer(store db.Store) *Server {
-	server := &Server{store: store}
-	router := gin.Default()
+func NewServer(config util.Config, store db.Store) (*Server, error) {
+	tokenMaker, err := token.NewPasetoMaker(util.RandomString(32))
+	if err != nil {
+		return nil, fmt.Errorf("unable to create token: %s", err.Error())
+	}
+	server := &Server{
+		config:     config,
+		store:      store,
+		tokenMaker: tokenMaker,
+	}
 
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		if err := v.RegisterValidation("currency", validCurrency); err != nil {
 			log.Fatal("error registering currency validation:", err.Error())
 		}
 	}
+
+	server.setupRouter()
+
+	return server, nil
+}
+
+func (server *Server) setupRouter() {
+	router := gin.Default()
 
 	accounts := router.Group("/accounts")
 
@@ -44,9 +64,9 @@ func NewServer(store db.Store) *Server {
 	users := router.Group("/users")
 
 	users.POST("", server.createUser)
+	users.POST("/login", server.loginUser)
 
 	server.router = router
-	return server
 }
 
 func (server *Server) Start(address string) error {
