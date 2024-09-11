@@ -15,3 +15,5 @@ services:
       - DB_SOURCE=postgresql://root:secret@postgres:5432/simple_bank?sslmode=disable
     depends_on:
       - postgres
+    entrypoint: ["/simple-bank-api/wait-for.sh", "postgres:5432", "--", "/simple-bank-api/start.sh"]
+    command: [ "/simple-bank-api/main" ]
