@@ -5,28 +5,8 @@ on:
     branches: [ "master" ]
 
 jobs:
-  create-envfile:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Creat .env file
-      uses: SpicyPizza/create-envfile@v2.0.3
-      with:
-        file_name: app.env
-        fail_on_empty: true
-        sort_keys: false
-
-        envkey_DB_DRIVER: "postgres"
-        envkey_DB_SOURCE: ${{ secrets.PROD_DB_SOURCE}}
-        envkey_SERVER_ADDRESS: "0.0.0.0:8080"
-
-    - name: Upload .env file
-      uses: actions/upload-artifact@v4.3.4
-      with:
-          name: app-env
-          path: app.env
 
   build:
-    needs: [create-envfile]
     permissions:
         id-token: write
         contents: read
@@ -38,6 +18,17 @@ jobs:
 
       - name: Check out code
         uses: actions/checkout@v3
+
+      - name: Create .env file
+        uses: SpicyPizza/create-envfile@v2.0.3
+        with:
+          file_name: app.env
+          fail_on_empty: true
+          sort_keys: false
+
+          envkey_DB_DRIVER: "postgres"
+          envkey_DB_SOURCE: ${{ secrets.PROD_DB_SOURCE}}
+          envkey_SERVER_ADDRESS: "0.0.0.0:8080"
 
       - name: Download .env file
         uses: actions/download-artifact@v4.1.8
