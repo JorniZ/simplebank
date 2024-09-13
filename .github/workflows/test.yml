@@ -41,12 +41,6 @@ jobs:
         envkey_DB_DRIVER: "postgres"
         envkey_DB_SOURCE: ${{ secrets.DEVELOPMENT_DB_SOURCE}}
         envkey_SERVER_ADDRESS: "0.0.0.0:8080"
-      
-    - name: "ls files"
-      run: |
-        ls
-        echo catting app.env
-        cat app.env
 
     - name: Set up Go
       uses: actions/setup-go@v5.0.2
