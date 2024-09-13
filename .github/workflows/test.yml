@@ -37,6 +37,9 @@ jobs:
         file_name: app.env
         fail_on_empty: true
         sort_keys: false
+      
+    - name: "ls files"
+      run: ls
 
     - name: Set up Go
       uses: actions/setup-go@v5.0.2
