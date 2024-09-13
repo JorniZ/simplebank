@@ -5,8 +5,28 @@ on:
     branches: [ "master" ]
 
 jobs:
+  create-envfile:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Creat .env file
+      uses: SpicyPizza/create-envfile@v2.0.3
+      with:
+        file_name: app.env
+        fail_on_empty: true
+        sort_keys: false
+
+        envkey_DB_DRIVER: "postgres"
+        envkey_DB_SOURCE: ${{ secrets.PROD_DB_SOURCE}}
+        envkey_SERVER_ADDRESS: "0.0.0.0:8080"
+
+    - name: Upload .env file
+      uses: actions/upload-artifact@v4.3.4
+      with:
+          name: app-env
+          path: app.env
 
   build:
+    needs: [create-envfile]
     permissions:
         id-token: write
         contents: read
@@ -16,24 +36,30 @@ jobs:
     
     steps:
 
-        - name: Check out code
-          uses: actions/checkout@v3
+      - name: Check out code
+        uses: actions/checkout@v3
 
-        - name: Configure AWS credentials
-          uses: aws-actions/configure-aws-credentials@v4
-          with:
+      - name: Download .env file
+        uses: actions/download-artifact@v4.1.8
+        with:
+          name: app.env
+          path: .
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
             role-to-assume: arn:aws:iam::403501427483:role/gh-actions-role
             aws-region: eu-central-1
 
-        - name: Login to Amazon ECR
-          id: login-ecr
-          uses: aws-actions/amazon-ecr-login@v2
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
 
-        - name: Build, tag, and push docker image to Amazon ECR
-          env:
-            REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-            REPOSITORY: simplebank
-            IMAGE_TAG: ${{ github.sha }}
-          run: |
+      - name: Build, tag, and push docker image to Amazon ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: simplebank
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
             docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
             docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
