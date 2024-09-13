@@ -30,12 +30,6 @@ jobs:
           envkey_DB_SOURCE: ${{ secrets.PROD_DB_SOURCE}}
           envkey_SERVER_ADDRESS: "0.0.0.0:8080"
 
-      - name: Download .env file
-        uses: actions/download-artifact@v4.1.8
-        with:
-          name: app-env
-          path: .
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
