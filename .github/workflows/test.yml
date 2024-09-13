@@ -41,6 +41,7 @@ jobs:
     - name: "ls files"
       run: |
         ls
+        echo catting app.env
         cat app.env
 
     - name: Set up Go
