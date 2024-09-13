@@ -11,35 +11,14 @@ on:
 
 jobs:
 
-  create-envfile:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Create .env file
-      uses: SpicyPizza/create-envfile@v2.0.3
-      with:
-        file_name: app.env
-        fail_on_empty: true
-        sort_keys: false
-        # errors are intended here
-        envkey_DB_DRIVER: "postgres"
-        envkey_DB_SOURCE: "postgresql://root:${{ secrets.DB_PASS }}@localhost:5432/simple_bank?sslmode=disable"
-        envkey_SERVER_ADDRESS: "0.0.0.0:8080"
-        
-    - name: Upload .env file
-      uses: actions/upload-artifact@v4.3.4
-      with:
-        name: app-env
-        path: app.env
-
   test:
-    needs: [create-envfile]
     runs-on: ubuntu-latest
     services:
       postgres:
         image: postgres:16
         env:
           POSTGRES_USER: root
-          POSTGRES_PASSWORD: ${{ secrets.DB_PASS }}
+          POSTGRES_PASSWORD: secret
           POSTGRES_DB: simple_bank
         ports:
           - 5432:5432
@@ -56,12 +35,6 @@ jobs:
       uses: actions/setup-go@v5.0.2
       with:
         go-version: stable
-
-    - name: Download .env file
-      uses: actions/download-artifact@v4.1.8
-      with:
-        name: app-env
-        path: .
 
     - name: Install golang-migrate
       run: |
