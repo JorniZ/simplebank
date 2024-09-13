@@ -42,7 +42,7 @@ jobs:
       - name: Download .env file
         uses: actions/download-artifact@v4.1.8
         with:
-          name: app.env
+          name: app-env
           path: .
 
       - name: Configure AWS credentials
