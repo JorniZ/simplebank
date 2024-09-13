@@ -39,7 +39,9 @@ jobs:
         sort_keys: false
       
     - name: "ls files"
-      run: ls
+      run: |
+        ls
+        cat app.env
 
     - name: Set up Go
       uses: actions/setup-go@v5.0.2
