@@ -1,3 +1,4 @@
+# this action creates the production env file and pushes the image to ecr
 name: Deploy on production
 
 on:
