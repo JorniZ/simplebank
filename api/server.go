@@ -29,6 +29,7 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 	if err != nil {
 		return nil, fmt.Errorf("unable to create token: %s", err.Error())
 	}
+
 	server := &Server{
 		config:     config,
 		store:      store,
@@ -48,6 +49,7 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 
 func (server *Server) setupRouter() {
 	router := gin.Default()
+	router.SetTrustedProxies([]string{"localhost"})
 
 	authRoutes := router.Group("/")
 	authRoutes.Use(authMiddleWare(server.tokenMaker))
@@ -66,6 +68,8 @@ func (server *Server) setupRouter() {
 	users := router.Group("/users")
 	users.POST("", server.createUser)
 	users.POST("/login", server.loginUser)
+
+	router.POST("/tokens/renew_access", server.renewAccessToken)
 
 	server.router = router
 }
