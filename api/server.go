@@ -49,7 +49,7 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 
 func (server *Server) setupRouter() {
 	router := gin.Default()
-	if err := router.SetTrustedProxies([]string{"localhost"}); err != nil {
+	if err := router.SetTrustedProxies([]string{"127.0.0.1"}); err != nil {
 		log.Fatal("error setting trusted proxies:", err.Error())
 	}
 
