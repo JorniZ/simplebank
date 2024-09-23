@@ -1,5 +1,5 @@
 # this action creates the production env file and pushes the image to ecr
-# this action also makes sure everything gets deployed on kubernetes
+# this action also makes sure everything
 name: Deploy on production
 
 on:
@@ -20,12 +20,6 @@ jobs:
 
       - name: Check out code
         uses: actions/checkout@v3
-
-      - name: Install kubectl
-        uses: azure/setup-kubectl@v4
-        with:
-          version: 'v1.31.0' # default is latest stable
-        id: install
 
       - name: Create .env file
         uses: SpicyPizza/create-envfile@v2.0.3
@@ -54,16 +48,6 @@ jobs:
           REPOSITORY: simplebank
           IMAGE_TAG: ${{ github.sha }}
         run: |
-            docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -t $REGISTRY/$REPOSITORY:latest .
+            docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
             docker push -a $REGISTRY/$REPOSITORY
 
-      - name: Update kube config
-        run: aws eks update-kubeconfig --name simple-bank --region eu-central-1
-      
-      - name: Deploy image to amazon eks
-        run: |
-          kubectl apply -f eks/aws-auth.yaml --validate=false
-          kubectl apply -f eks/deployment.yaml --validate=false
-          kubectl apply -f eks/service.yaml --validate=false
-          kubectl apply -f eks/issuer.yaml --validate=false
-          kubectl apply -f eks/ingress.yaml --validate=false
