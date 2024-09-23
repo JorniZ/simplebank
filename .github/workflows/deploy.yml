@@ -1,10 +1,8 @@
 # this action creates the production env file and pushes the image to ecr
-# this action also makes sure everything
 name: Deploy on production
 
 on:
-  push:
-    branches: [ "master" ]
+  workflow_dispatch:
 
 jobs:
 
