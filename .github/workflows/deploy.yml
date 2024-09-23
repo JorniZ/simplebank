@@ -1,4 +1,5 @@
 # this action creates the production env file and pushes the image to ecr
+# this action also makes sure everything gets deployed on kubernetes
 name: Deploy on production
 
 on:
