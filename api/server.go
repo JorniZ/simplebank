@@ -49,7 +49,9 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 
 func (server *Server) setupRouter() {
 	router := gin.Default()
-	router.SetTrustedProxies([]string{"localhost"})
+	if err := router.SetTrustedProxies([]string{"localhost"}); err != nil {
+		log.Fatal("error setting trusted proxies:", err.Error())
+	}
 
 	authRoutes := router.Group("/")
 	authRoutes.Use(authMiddleWare(server.tokenMaker))
