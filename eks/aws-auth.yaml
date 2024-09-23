@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aws-auth
+  namespace: kube-system
+data:
+  mapUsers: |
+    - userarn: arn:aws:iam::403501427483:user/cli-user-jzegers
+      username: cli-user-jzegers
+      groups:
+        - system:masters
