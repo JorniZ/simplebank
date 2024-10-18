@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"log"
 	"net"
 	"net/http"
@@ -12,6 +13,9 @@ import (
 	"github.com/JorniZ/simplebank/gapi"
 	"github.com/JorniZ/simplebank/pb"
 	"github.com/JorniZ/simplebank/util"
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/golang/mock/mockgen/model"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	_ "github.com/lib/pq"
@@ -36,9 +40,24 @@ func main() {
 		log.Fatal("cannot ping db:", err.Error())
 	}
 
+	runDBMigration("file://db/migration", config.DBSource)
+
 	store := db.NewStore(conn)
 	go runGatewayServer(config, store)
 	runGrpcServer(config, store)
+}
+
+func runDBMigration(migrationURL string, dbSource string) {
+	migration, err := migrate.New(migrationURL, dbSource)
+	if err != nil {
+		log.Fatal("error creating new migration: ", err.Error())
+	}
+
+	if err := migration.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) {
+		log.Fatal("error running db migration up: ", err.Error())
+	}
+
+	log.Println("db migrated successfully")
 }
 
 func runGrpcServer(config util.Config, store db.Store) {

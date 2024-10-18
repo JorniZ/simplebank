@@ -31,7 +31,7 @@ test:
 	go test -v -cover ./...
 
 server:
-	clear; go run main.go
+	go run main.go
 
 mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/JorniZ/simplebank/db/sqlc Store
