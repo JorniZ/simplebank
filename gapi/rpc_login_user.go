@@ -25,7 +25,7 @@ func (server *Server) LoginUser(ctx context.Context, req *pb.LoginUserRequest) (
 	user, err := server.store.GetUser(ctx, req.Username)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, status.Error(codes.NotFound, "uesr not found")
+			return nil, status.Error(codes.NotFound, "user not found")
 		}
 		return nil, status.Errorf(codes.Internal, "couldn't get user: %s", err.Error())
 	}

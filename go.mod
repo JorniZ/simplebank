@@ -16,11 +16,15 @@ require (
 	google.golang.org/grpc v1.67.0
 )
 
-require google.golang.org/genproto/googleapis/rpc v0.0.0-20241007155032-5fefd90f89a9
+require (
+	github.com/rs/zerolog v1.33.0
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20241007155032-5fefd90f89a9
+)
 
 require (
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
+	github.com/mattn/go-colorable v0.1.13 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 )
 
@@ -71,7 +75,7 @@ require (
 	golang.org/x/crypto v0.27.0
 	golang.org/x/exp v0.0.0-20240823005443-9b4947da3948 // indirect
 	golang.org/x/net v0.29.0 // indirect
-	golang.org/x/sys v0.25.0 // indirect
+	golang.org/x/sys v0.26.0 // indirect
 	golang.org/x/text v0.18.0 // indirect
 	google.golang.org/protobuf v1.35.1
 	gopkg.in/ini.v1 v1.67.0 // indirect
